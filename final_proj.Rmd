@@ -1,0 +1,320 @@
+### Data Preparation
+
+#### Step1: Data Acquisition
+
+```{r}
+library(readr)
+X2019 <- read_csv("/Users/kachunlee/Downloads/2019.csv")
+View(X2019)
+```
+
+#### Step2: Explore data
+
+***1. summary***
+
+```{r}
+
+summary(X2019)
+```
+
+
+#### Step3: Deal with missing values:
+
+```{r}
+sapply(X2019, function(x) sum(is.na (X2019)))
+```
+
+There are no na value. good.
+
+#### Step4: ouliers
+
+
+We use boxplot to drop the points below Q1 - 1.5 \* IQR or above Q3 + 1.5 \* IQR.
+
+```{r}
+bx1<-boxplot(X2019$`GDP per capita`, ylab = "Healthy life expectancy")
+```
+
+no outliers for this column.
+
+```{r}
+bx2<-boxplot(X2019$`Social support`, ylab = "Social support")
+```
+
+There are some outliers
+
+```{r}
+out_ind2 <- which( X2019$`Social support`%in% bx2$out)
+X2019_no<-X2019[-out_ind2,]
+dim(X2019_no)
+```
+
+```{r}
+bx3<-boxplot(X2019_no$`Healthy life expectancy`, ylab = "Health (Life Expectancy)")
+
+```
+
+1 outliers!
+
+```{r}
+out_ind3 <- which(X2019_no$`Healthy life expectancy`%in% bx3$out)
+X2019_no<-X2019_no[-out_ind3,]
+dim(X2019_no)
+```
+
+```{r}
+dim(X2019)
+```
+
+
+```{r}
+bx4<-boxplot(X2019_no$`Healthy life expectancy`, ylab = "Healthy life expectancy")
+```
+
+
+
+```{r}
+bx5<-boxplot(X2019_no$`Freedom to make life choices`, ylab = "Freedom")
+```
+
+
+```{r}
+bx6<-boxplot(X2019_no$`Freedom to make life choices`, ylab = "Freedom")
+```
+
+
+```{r}
+out_ind6 <- which( X2019_no$`Freedom to make life choices`%in% bx6$out)
+X2019_no<-X2019_no[-out_ind6,]
+dim(X2019_no)
+```
+
+```{r}
+bx7<-boxplot(X2019_no$Generosity, ylab = "Generosity")
+```
+
+
+```{r}
+out_ind7 <- which( X2019_no$Generosity%in% bx7$out)
+X2019_no<-X2019_no[-out_ind7,]
+dim(X2019_no)
+```
+
+delete all the outliers now!!!
+
+```{r}
+bx8<-boxplot(X2019_no$`Perceptions of corruption`, ylab = "Corruption")
+```
+
+```{r}
+out_ind8 <- which( X2019_no$`Perceptions of corruption`%in% bx8$out)
+X2019_no<-X2019_no[-out_ind8,]
+dim(X2019_no)
+```
+
+#### Step5: correlation/collinearity/distribution analysis
+
+Use pairs.panels to see the distributions and correlation of each feature in the data set.
+
+```{r}
+library(psych)
+pairs.panels(X2019_no,method = "pearson")
+```
+
+#### Step6: normalization
+
+```{r}
+#X2019_scaled<-X2019_no
+#X2019_scaled
+#use scale function to normalize all the columns except the target
+#X2019_scaled<-X2019_scaled[, colnames(X2019_scaled)[c(2:8)]]
+#X2019_scaled$Happyiness<-X2019_no$`Happiness Score`
+#X2019_scaled
+
+```
+
+check out if the columns have been normalized
+
+```{r}
+#summary(X2015_scaled)
+```
+
+```{r}
+#lin<-lm(Happyiness~. , data = X2015_scaled)
+#summary(lin)
+```
+
+```{r}
+library(readr)
+X2020 <- read_csv("/Users/kachunlee/Downloads/2020.csv")
+View(X2020)
+```
+
+#### Step2: Explore data
+
+***1. summary***
+
+```{r}
+
+summary(X2020)
+```
+
+#### Step3: Deal with missing values:
+
+```{r}
+sapply(X2020, function(x) sum(is.na (X2020)))
+```
+
+There are no na value. good.
+
+#### Step4: ouliers
+
+We use boxplot to drop the points below Q1 - 1.5 \* IQR or above Q3 + 1.5 \* IQR.
+
+```{r}
+bx1<-boxplot(X2020$`Ladder score`, ylab = "Happiness-Score")
+```
+
+no outliers for column 1.
+
+```{r}
+bx2<-boxplot(X2020$`Logged GDP per capita`, ylab = "Logged GDP per capita")
+```
+
+no outliers for column 2.
+
+```{r}
+bx3<-boxplot(X2020$'Social support', ylab = "Family")
+```
+
+2 outliers!
+
+```{r}
+out_ind3 <- which( X2020$'Social support'%in% bx3$out)
+X2020_no<-X2020[-out_ind3,]
+dim(X2020_no)
+```
+
+```{r}
+dim(X2020)
+```
+
+ok, delete the outliers for coolumn3!
+
+```{r}
+bx4<-boxplot(X2020_no$`Healthy life expectancy`, ylab = "Health (Life Expectancy)")
+```
+
+no outliers!
+
+```{r}
+bx5<-boxplot(X2020_no$'Freedom to make life choices', ylab = "Freedom")
+```
+
+2 outliers!
+
+out_ind2 <- which( X2020$'Freedom to make life choices'%in% bx5$out)
+X2020_no<-X2020_no[-out_ind2,]
+dim(X2020_no)
+
+```{r}
+bx6<-boxplot(X2020_no$`Generosity`, ylab = "Generosity")
+```
+
+2 outliers!
+
+```{r}
+out_ind6 <- which( X2020_no$`Generosity`%in% bx6$out)
+X2020_no<-X2020_no[-out_ind6,]
+dim(X2020_no)
+```
+
+```{r}
+bx7<-boxplot(X2020_no$'Perceptions of corruption', ylab = "Perceptions of corruption")
+```
+
+many outlier!
+
+```{r}
+out_ind7 <- which( X2020_no$'Perceptions of corruption'%in% bx7$out)
+X2020_no<-X2020_no[-out_ind7,]
+dim(X2020_no)
+```
+
+delete all the outliers now!!!
+
+#### Step5: correlation/collinearity/distribution analysis
+
+Use pairs.panels to see the distributions and correlation of each feature in the data set.
+
+```{r}
+library(psych)
+pairs.panels(X2020_no,method = "pearson")
+```
+
+```{r}
+dim(X2019_no)
+dim(X2020_no)
+```
+
+```{r}
+mean(X2019_no$Score)
+mean(X2020_no$`Ladder score`)
+```
+
+
+```{r}
+wilcox.test(X2019_no$Score, X2020_no$`Ladder score`, paired = TRUE, alternative ="two.sided")
+```
+```{r}
+Y2019 <- read_csv("/Users/kachunlee/Downloads/2019_1.csv")
+Y2020 <- read_csv("/Users/kachunlee/Downloads/2020_1.csv")
+Y<-read_csv("/Users/kachunlee/Downloads/combine.csv")
+```
+```{r}
+wilcox.test(Y2019$Score, Y2020$`Ladder score`, paired = TRUE, alternative ="two.sided")
+```
+
+```{r}
+t.test(X2019$Score,X2020$`Ladder score`,paired = FALSE)
+```
+
+
+
+
+```{r}
+Y2019
+Y2020
+Y
+```
+
+```{r}
+install.packages(ggpubr)
+library(ggpubr)
+```
+
+
+```{r}
+ggboxplot(data = Y, x = 'group', y = 'Score', 
+       palette = c("#00AFBB", "#E7B800"),
+          ylab = "score", xlab = "year")
+```
+
+```{r}
+wilcox.test(Y2019$Score, Y2020$`Ladder score`, alternative = "two.sided")
+```
+
+```{r}
+df <- read_csv("/Users/kachunlee/Downloads/anova3.csv")
+df
+```
+
+```{r}
+model <- aov(Score~group, data=df)
+summary(model)
+```
+
+```{r}
+TukeyHSD(model, conf.level=.95)
+plot(TukeyHSD(model, conf.level=.95), las = 2)
+```
